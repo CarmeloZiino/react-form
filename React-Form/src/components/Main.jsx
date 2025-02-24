@@ -1,44 +1,63 @@
-import { useState } from 'react'
-import arrayCose from "../data/coseDaFare"
+import { useState } from "react";
+import arrayCose from "../data/coseDaFare";
 
 const Main = () => {
+  const [titleForm, setTitleForm] = useState("Mettere a mollo i legumi");
+  const handleChange = (e) => {
+    console.log(e);
+    console.log(e.target);
+    setTitleForm(e.target.value);
+  };
 
-   const [ titleForm , setTitleForm] = useState("Mettere a mollo i legumi")
-   const handleChange = (e) =>{
-     console.log ( e )
-     console.log ( e.target)
-     setTitleForm ( e.target.value)
-  }
+  const addTask = (e) => {
+    e.preventDefault();
+    const task = newTask.trim();
+    setTasks([...tasks, task]);
+    setNewTask('');
+  };
 
-// array iniziale reattivo
-  const [ task , setTasks] = useState ( arrayCose )
+  // array iniziale reattivo
+  const [tasks, setTasks] = useState(arrayCose);
 
   //Nuovo task da aggiungere
-  const [ newTask , setNewTask ] = useState ('')
+  const [newTask, setNewTask] = useState("");
 
-    return (
-      
-      <main>
-          <div>
-            <ul>
-            {
-              arrayCose.map((element) => {
-                return(
-                <li>
-                  {element.titolo}
-                </li>)
-              })
-            }
-            </ul>
-          </div>
-          <input 
-      type="text"
-      value={titleForm}
-      onChange={ handleChange }
-      /> 
+  // Rimuovere cose fatte
 
-      </main>
-  
+  const removeTask = (indiceElementoArray) => {
+    const arrayClone = tasks.filter(
+      (element, index) => index !== indiceElementoArray
     );
+    return setTasks(arrayClone);
   };
-  export default Main;
+
+  return (
+    <main>
+      <div className="container mt-5 w-50">
+        <ul className="list-group">
+          {tasks.map((element , index) => {
+            return (
+            <li key={index} className="list-group-item">
+              <span>{element}</span>
+              <button onClick={() => removeTask(index)} className="btn btn-sm btn-danger float-end">X</button>
+              </li>);
+          })}
+        </ul>
+
+        {/* Form!!! */}
+
+        <form onSubmit={addTask}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Vuoi aggiungere roba?"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+          />
+          <button  className="btn btn-primary mt-3">Aggiungi</button>
+        </form>
+      </div>
+    </main>
+  );
+};
+export default Main;
